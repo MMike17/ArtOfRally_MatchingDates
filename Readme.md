@@ -20,6 +20,11 @@ A mod for Art of Rally that blocks some cars from being used in career mode if t
 ![](https://img.shields.io/badge/XBox-Untested-yellow)
 ![](https://img.shields.io/badge/Switch-Untested-yellow)
 
+## Requirements
+
+This mod requires the "Real car names" that you can find [here](https://github.com/MMike17/ArtOfRally_RealCarNames).\
+Latest release [![](https://img.shields.io/github/v/release/MMike17/ArtOfRally_RealCarNames?label=Real%20car%20names)](https://github.com/MMike17/ArtOfRally_RealCarNames/releases/latest)
+
 ## Usage
 
 Press `CTRL + F10` to bring up the mod menu.\
