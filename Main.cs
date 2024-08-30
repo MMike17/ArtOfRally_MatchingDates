@@ -29,9 +29,9 @@ namespace MatchingDates
             return true;
         }
 
-        public static bool IsCarValid(string carName, string rallyYear)
+        public static bool IsCarValid(string carName, int rallyYear)
         {
-            return int.Parse(rallyYear) >= int.Parse(CarNameProvider.years[CarNameProvider.DetectCarName(carName)]);
+            return rallyYear >= int.Parse(CarNameProvider.years[CarNameProvider.DetectCarName(carName)]);
         }
 
         public static void Log(string message) => logger.Log(message);
