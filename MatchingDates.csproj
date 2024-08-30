@@ -75,10 +75,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="CopyInfo" AfterTargets="BeforeBuild">
-    <Copy SourceFiles="Info.json" DestinationFolder="D:\SteamLibrary\steamapps\common\artofrally\Mods\RealCarNames" />
+    <Copy SourceFiles="Info.json" DestinationFolder="D:\SteamLibrary\steamapps\common\artofrally\Mods\MatchingDates" />
   </Target>
   <Target Name="CopyDll" AfterTargets="Build">
-    <Copy SourceFiles="bin\Debug\RealCarNames.dll" DestinationFolder="D:\SteamLibrary\steamapps\common\artofrally\Mods\RealCarNames" />
+    <Copy SourceFiles="bin\Debug\MatchingDates.dll" DestinationFolder="D:\SteamLibrary\steamapps\common\artofrally\Mods\MatchingDates" />
   </Target>
   <Target Name="StartGame" AfterTargets="AfterBuild">
     <Exec Command="&quot;D:\Games\Current\art of rally.url&quot;" />
