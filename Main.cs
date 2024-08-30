@@ -1,42 +1,39 @@
-﻿using RealCarNames;
-using UnityModManagerNet;
+﻿using HarmonyLib;
+using RealCarNames;
+using System.Reflection;
 
 using static UnityModManagerNet.UnityModManager;
 
 namespace MatchingDates
 {
-    // what do I need here ?
-
-    // __we need infos about the cars and the corresponding dates__
-    // Add hooks in "real names" to get info ?
-
-    // __Upkeep__
-
-    // copy readme structure
-
-    public class Main
+    static class Main
     {
-        static ModEntry.ModLogger logger;
+        public static bool enabled { get; private set; }
 
-        // "Everything Works So Far"
-        static int ewsfCount;
+        static ModEntry.ModLogger logger;
 
         static bool Load(ModEntry modEntry)
         {
-            ewsfCount = 0;
             logger = modEntry.Logger;
+            modEntry.OnToggle = OnToggle;
 
-            //
+            Harmony harmony = new Harmony(modEntry.Info.Id);
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             return true;
         }
 
-        public static void Log(string message) => logger.Log(message);
-
-        public static void LogEwSF()
+        static bool OnToggle(ModEntry modEntry, bool state)
         {
-            ewsfCount++;
-            Log("EwSF (" + ewsfCount + ")");
+            enabled = state;
+            return true;
         }
+
+        public static bool IsCarValid(string carName, string rallyYear)
+        {
+            return int.Parse(rallyYear) >= int.Parse(CarNameProvider.years[CarNameProvider.DetectCarName(carName)]);
+        }
+
+        public static void Log(string message) => logger.Log(message);
     }
 }
