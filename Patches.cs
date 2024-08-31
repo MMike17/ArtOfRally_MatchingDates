@@ -11,30 +11,31 @@ namespace MatchingDates
     {
         public static int detectedYear { get; private set; }
 
+        static List<string> originalList;
+        static List<string> truncatedList;
+
         static void Prefix()
         {
+            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER)
+                return;
+
             // reset car selection index
             SaveGame.SetInt(GameModeManager.GetSeasonDataCurrentGameMode().CarClass.ToString(), 0);
         }
-
-        // /!\ initial car displayed is the wrong one /!\
-        // what should we refresh after setting the string list ?
-
-        // /!\ car model is stuck on old list /!\
-        // Check CarChooserManager
 
         static void Postfix(CarChooserHelper __instance)
         {
             if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER)
                 return;
 
+            // remove unavailable cars from selection list
+            originalList = new List<string>(__instance.CarButton.stringList);
+            truncatedList = new List<string>(__instance.CarButton.stringList);
+
             detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
             List<string> toRemove = new List<string>();
 
-            string firstValidCarName = __instance.CarButton.stringList.Find(car => Main.IsCarValid(car, detectedYear));
-            int adjustedIndex = __instance.CarButton.stringList.IndexOf(firstValidCarName);
-
-            __instance.CarButton.stringList.ForEach(carName =>
+            originalList.ForEach(carName =>
             {
                 if (!Main.IsCarValid(carName, detectedYear))
                     toRemove.Add(carName);
@@ -43,21 +44,31 @@ namespace MatchingDates
             string debug = string.Empty;
             toRemove.ForEach(carName =>
             {
-                __instance.CarButton.stringList.Remove(carName);
+                truncatedList.Remove(carName);
                 debug += "\n- " + carName + " (" + CarNameProvider.years[CarNameProvider.DetectCarName(carName)] + ")";
             });
             Main.Log("Removed cars :" + debug);
 
-            __instance.CarButton.stringListLength = __instance.CarButton.stringList.Count - 1;
+            // set list of cars for selection
+            __instance.CarButton.stringList = truncatedList;
+            __instance.CarButton.stringListLength = truncatedList.Count - 1;
+
+            // updated UI stats and name
             __instance.CarButton.GetType().GetMethod("UpdateCarSpecs", BindingFlags.NonPublic | BindingFlags.Instance).
                 Invoke(__instance.CarButton, null);
             __instance.CarButton.UpdateOptionTextAndArrows();
 
-            // /!\ This doesn't fix the name but fixes the model
-            CarChooserManager_SelectCarInClass_Patch.manager.SelectCarInClass(
-                GameModeManager.GetSeasonDataCurrentGameMode().CarClass,
-                adjustedIndex
-            );
+            // reselect car model
+            UIManager.Instance.PanelManager.CarChooserManager.SelectCarInClass(GameModeManager.GetSeasonDataCurrentGameMode().CarClass, 0);
+            Main.Log("Reselected car " + truncatedList[0]);
+        }
+
+        public static int AdjustedToNormalIndex(int carIndex)
+        {
+            if (originalList == null)
+                return carIndex;
+
+            return originalList.IndexOf(truncatedList[carIndex]);
         }
     }
 
@@ -66,8 +77,6 @@ namespace MatchingDates
     {
         static void Postfix(ref List<Car> __result)
         {
-            Main.Log("Started postfix for retrieving car list for class.");
-
             if (!Main.enabled || CarChooserHelper_Init_Patch.detectedYear == 0)
                 return;
 
@@ -86,17 +95,13 @@ namespace MatchingDates
     [HarmonyPatch(typeof(CarChooserManager), nameof(CarChooserManager.SelectCarInClass))]
     static class CarChooserManager_SelectCarInClass_Patch
     {
-        public static CarChooserManager manager { get; private set; }
-
-        static void Postfix(CarChooserManager __instance)
+        // this is called when we change cars
+        static void Prefix(CarChooserManager __instance, Car.CarClass carClass, ref int index)
         {
-            // this is called when we change car
+            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || CarChooserHelper_Init_Patch.detectedYear == 0)
+                return;
 
-            Main.Log("Post fixing Car selection from CarChooserManager");
-            // this happens before fixing list
-            // call this again after fixing lists ?
-
-            manager = __instance;
+            index = CarChooserHelper_Init_Patch.AdjustedToNormalIndex(index);
         }
     }
 }
