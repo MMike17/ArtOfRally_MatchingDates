@@ -49,6 +49,14 @@ namespace MatchingDates
             });
             Main.Log("Removed cars :" + debug);
 
+            if (truncatedList.Count == 0)
+            {
+                truncatedList = originalList;
+                detectedYear = 0;
+                Main.Log("New list is empty. Disabling feature until next call.");
+                return;
+            }
+
             // set list of cars for selection
             __instance.CarButton.stringList = truncatedList;
             __instance.CarButton.stringListLength = truncatedList.Count - 1;
@@ -77,7 +85,7 @@ namespace MatchingDates
     {
         static void Postfix(ref List<Car> __result)
         {
-            if (!Main.enabled || CarChooserHelper_Init_Patch.detectedYear == 0)
+            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || CarChooserHelper_Init_Patch.detectedYear == 0)
                 return;
 
             List<Car> toRemove = new List<Car>();
@@ -104,4 +112,8 @@ namespace MatchingDates
             index = CarChooserHelper_Init_Patch.AdjustedToNormalIndex(index);
         }
     }
+
+    // Doesn't work when we move between seasons...
+    // detect when we leave the screen (forward or backwards)
+    // reset all data (mainly detectedYear)
 }
