@@ -18,7 +18,10 @@ namespace MatchingDates
         }
 
         // /!\ initial car displayed is the wrong one /!\
+        // what should we refresh after setting the string list ?
+
         // /!\ car model is stuck on old list /!\
+        // Check CarChooserManager
 
         static void Postfix(CarChooserHelper __instance)
         {
@@ -27,6 +30,9 @@ namespace MatchingDates
 
             detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
             List<string> toRemove = new List<string>();
+
+            string firstValidCarName = __instance.CarButton.stringList.Find(car => Main.IsCarValid(car, detectedYear));
+            int adjustedIndex = __instance.CarButton.stringList.IndexOf(firstValidCarName);
 
             __instance.CarButton.stringList.ForEach(carName =>
             {
@@ -45,6 +51,13 @@ namespace MatchingDates
             __instance.CarButton.stringListLength = __instance.CarButton.stringList.Count - 1;
             __instance.CarButton.GetType().GetMethod("UpdateCarSpecs", BindingFlags.NonPublic | BindingFlags.Instance).
                 Invoke(__instance.CarButton, null);
+            __instance.CarButton.UpdateOptionTextAndArrows();
+
+            // /!\ This doesn't fix the name but fixes the model
+            CarChooserManager_SelectCarInClass_Patch.manager.SelectCarInClass(
+                GameModeManager.GetSeasonDataCurrentGameMode().CarClass,
+                adjustedIndex
+            );
         }
     }
 
@@ -53,6 +66,8 @@ namespace MatchingDates
     {
         static void Postfix(ref List<Car> __result)
         {
+            Main.Log("Started postfix for retrieving car list for class.");
+
             if (!Main.enabled || CarChooserHelper_Init_Patch.detectedYear == 0)
                 return;
 
@@ -65,6 +80,23 @@ namespace MatchingDates
 
             foreach (Car car in toRemove)
                 __result.Remove(car);
+        }
+    }
+
+    [HarmonyPatch(typeof(CarChooserManager), nameof(CarChooserManager.SelectCarInClass))]
+    static class CarChooserManager_SelectCarInClass_Patch
+    {
+        public static CarChooserManager manager { get; private set; }
+
+        static void Postfix(CarChooserManager __instance)
+        {
+            // this is called when we change car
+
+            Main.Log("Post fixing Car selection from CarChooserManager");
+            // this happens before fixing list
+            // call this again after fixing lists ?
+
+            manager = __instance;
         }
     }
 }
