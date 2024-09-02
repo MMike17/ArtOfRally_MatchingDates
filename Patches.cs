@@ -13,6 +13,16 @@ namespace MatchingDates
     // /!\ Methods don't get called when we go back to the panel... /!\
     // Can I highjack what is going from panel to panel ?
 
+    // PanelManager
+    // detect which panel we're popping
+
+    // exec order :
+    // Init prefix
+    // SelectCarInClass
+    // GetCurrentCarsListForClass x4
+    // Init postfix
+    // Init hide class
+
     // DOESN'T WORK
 
     // CarChooserHelper.BeginEvent
@@ -27,6 +37,15 @@ namespace MatchingDates
     //    }
     //}
 
+    [HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
+    static class CarChooserHelper_InitHideClass_Patch
+    {
+        static void Postfix()
+        {
+            Main.Log("Post fix for \"InitHideClass\"");
+        }
+    }
+
     [HarmonyPatch(typeof(CarChooserHelper), "Init")]
     static class CarChooserHelper_Init_Patch
     {
@@ -37,6 +56,8 @@ namespace MatchingDates
 
         static void Prefix()
         {
+            Main.Log("Init prefix");
+
             if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER)
                 return;
 
@@ -49,6 +70,8 @@ namespace MatchingDates
 
         static void Postfix(CarChooserHelper __instance)
         {
+            Main.Log("Init postfix");
+
             if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER)
                 return;
 
@@ -57,6 +80,11 @@ namespace MatchingDates
                 // remove unavailable cars from selection list
                 originalList = new List<string>(__instance.CarButton.stringList);
                 truncatedList = new List<string>(__instance.CarButton.stringList);
+
+                string debug2 = "original list : ";
+                foreach (string name in originalList)
+                    debug2 += "\n- " + name;
+                Main.Log(debug2);
 
                 detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
                 List<string> toRemove = new List<string>();
@@ -109,13 +137,17 @@ namespace MatchingDates
         public static void Reset() => detectedYear = 0;
     }
 
+    // curates car list to only have available cars
     [HarmonyPatch(typeof(CarManager), nameof(CarManager.GetCurrentCarsListForClass))]
     static class CarManager_GetCurrentCarsListForClass_Patch
     {
         static void Postfix(ref List<Car> __result)
         {
+            Main.Log("GetCurrentCarsListForClass Postfix");
+
             if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || CarChooserHelper_Init_Patch.detectedYear == 0)
                 return;
+
             List<Car> result = __result;
 
             Main.Try(() =>
@@ -135,12 +167,15 @@ namespace MatchingDates
         }
     }
 
+    // replaces car selection to correct index
     [HarmonyPatch(typeof(CarChooserManager), nameof(CarChooserManager.SelectCarInClass))]
     static class CarChooserManager_SelectCarInClass_Patch
     {
         // this is called when we change cars
         static void Prefix(CarChooserManager __instance, Car.CarClass carClass, ref int index)
         {
+            Main.Log("SelectCarInClass prefix");
+
             if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || CarChooserHelper_Init_Patch.detectedYear == 0)
                 return;
 
