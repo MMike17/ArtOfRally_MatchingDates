@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RealCarNames;
+using System;
 using System.Reflection;
 
 using static UnityModManagerNet.UnityModManager;
@@ -29,11 +30,20 @@ namespace MatchingDates
             return true;
         }
 
-        public static bool IsCarValid(string carName, int rallyYear)
-        {
-            return rallyYear >= int.Parse(CarNameProvider.years[CarNameProvider.DetectCarName(carName)]);
-        }
+        public static bool IsCarValid(string carName, int rallyYear) => rallyYear >= CarNameProvider.GetCarYear(carName);
 
         public static void Log(string message) => logger.Log(message);
+
+        public static void Try(Action callback)
+        {
+            try
+            {
+                callback?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Log(e.ToString());
+            }
+        }
     }
 }
