@@ -3,6 +3,9 @@
 	"DisplayName": "Matching dates",
 	"Author": "MMike17",
 	"Version": "0.9.0",
+	"Requirements": [
+		"RealCarNames"
+	],
 	"GameVersion": "1.5,5",
 	"AssemblyName": "MatchingDates.dll",
 	"EntryMethod": "MatchingDates.Main.Load",
