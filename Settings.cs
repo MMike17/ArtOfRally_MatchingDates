@@ -8,7 +8,8 @@ namespace MatchingDates
     {
         public enum Mode
         {
-            lock_to_date
+            lock_to_date,
+            // hide_in_selection
         }
 
         [Draw(DrawType.PopupList)]
