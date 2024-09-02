@@ -1,19 +1,24 @@
 ﻿using HarmonyLib;
 using RealCarNames;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityModManagerNet;
 
+using static MatchingDates.Settings;
 using static UnityModManagerNet.UnityModManager;
 
 namespace MatchingDates
 {
     static class Main
     {
+        const int MIN_YEAR = 1967;
+
         public static bool enabled { get; private set; }
         public static Settings settings { get; private set; }
 
         static ModEntry.ModLogger logger;
+        static Dictionary<Car, int> originalCarUnlock;
 
         static bool Load(ModEntry modEntry)
         {
@@ -27,22 +32,82 @@ namespace MatchingDates
             Harmony harmony = new Harmony(modEntry.Info.Id);
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
+            if (FindMod("RealCarNames") == null)
+            {
+                logger.Error("Required mod \"Real car names\" cannot be found, please make sure this mod is installed.");
+                return false;
+            }
+
             return true;
         }
 
         static bool OnToggle(ModEntry modEntry, bool state)
         {
             enabled = state;
+            RefreshCarLocks();
             return true;
         }
 
         public static void RefreshCarLocks()
         {
-            // what are the original car locks ?
-            // what are the new car locks ?
+            Try(() =>
+            {
+                bool storeOriginal = originalCarUnlock == null;
 
-            // set unlock date
-            // make sure the car is unlocked
+                if (storeOriginal)
+                    originalCarUnlock = new Dictionary<Car, int>();
+
+                string forceUnlocked = "Force unlocked cars : ";
+                string forceLocked = "Force locked cars : ";
+
+                CarManager.AllCarsList.ForEach(car =>
+                {
+                    if (storeOriginal)
+                        originalCarUnlock.Add(car, car.carStats.YearUnlocked);
+
+                    if (enabled)
+                    {
+                        if (settings.mode == Mode.lock_to_date)
+                        {
+                            int newUnlock = CarNameProvider.GetCarYear(car.name);
+                            car.carStats.YearUnlocked = newUnlock <= MIN_YEAR ? 0 : newUnlock;
+
+                            // I'll keep this if we ever have extra cars with prior dates
+                            //if (!car.carStats.IsUnlocked && car.carStats.YearUnlocked <= MIN_YEAR)
+                            //{
+                            //  SetCarUnlockState(car, true);
+                            //  forceUnlocked += "\n- " + car.name;
+                            //}
+
+                            if (car.carStats.YearUnlocked > MIN_YEAR)
+                            {
+                                SetCarUnlockState(car, false);
+                                forceLocked += "\n- " + car.name;
+                            }
+                        }
+                        else
+                            car.carStats.YearUnlocked = originalCarUnlock[car];
+                    }
+                    else
+                        car.carStats.YearUnlocked = originalCarUnlock[car];
+                });
+
+                Log(forceUnlocked);
+                Log(forceLocked);
+
+                Log("Refreshed car locks to " + settings.mode);
+            });
+        }
+
+        static void SetCarUnlockState(Car car, bool state)
+        {
+            car.carStats.IsUnlocked = state;
+
+            if (string.IsNullOrEmpty(car.carStats.UnlockedSaveConstant))
+                car.carStats.UnlockedSaveConstant = "UNLOCKABLE_" + car.carStats.YearUnlocked;
+
+            SaveGame.SetInt(car.carStats.UnlockedSaveConstant, state ? 1 : 0);
+            SaveGame.Save();
         }
 
         public static bool IsCarValid(string carName, int rallyYear) => rallyYear >= CarNameProvider.GetCarYear(carName);
