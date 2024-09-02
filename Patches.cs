@@ -6,22 +6,13 @@ using System.Reflection;
 
 namespace MatchingDates
 {
+    // Lets change the features :
+    // 1 - Lock cars to their production year first
+    // 2 - Hide cars in the selection menu
+
     // /!\ Doesn't work when we move between seasons... /!\
     // detect when we leave the screen (forward or backwards)
     // reset all data (mainly detectedYear)
-
-    // /!\ Methods don't get called when we go back to the panel... /!\
-    // Can I highjack what is going from panel to panel ?
-
-    // PanelManager
-    // detect which panel we're popping
-
-    // exec order :
-    // Init prefix
-    // SelectCarInClass
-    // GetCurrentCarsListForClass x4
-    // Init postfix
-    // Init hide class
 
     // DOESN'T WORK
 
