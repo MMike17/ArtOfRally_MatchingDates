@@ -28,7 +28,7 @@ namespace MatchingDates
     //    }
     //}
 
-    [HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
+    //[HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
     static class CarChooserHelper_InitHideClass_Patch
     {
         static void Postfix()
@@ -37,7 +37,7 @@ namespace MatchingDates
         }
     }
 
-    [HarmonyPatch(typeof(CarChooserHelper), "Init")]
+    //[HarmonyPatch(typeof(CarChooserHelper), "Init")]
     static class CarChooserHelper_Init_Patch
     {
         public static int detectedYear { get; private set; }
@@ -129,7 +129,7 @@ namespace MatchingDates
     }
 
     // curates car list to only have available cars
-    [HarmonyPatch(typeof(CarManager), nameof(CarManager.GetCurrentCarsListForClass))]
+    //[HarmonyPatch(typeof(CarManager), nameof(CarManager.GetCurrentCarsListForClass))]
     static class CarManager_GetCurrentCarsListForClass_Patch
     {
         static void Postfix(ref List<Car> __result)
@@ -159,7 +159,7 @@ namespace MatchingDates
     }
 
     // replaces car selection to correct index
-    [HarmonyPatch(typeof(CarChooserManager), nameof(CarChooserManager.SelectCarInClass))]
+    //[HarmonyPatch(typeof(CarChooserManager), nameof(CarChooserManager.SelectCarInClass))]
     static class CarChooserManager_SelectCarInClass_Patch
     {
         // this is called when we change cars
@@ -178,6 +178,9 @@ namespace MatchingDates
             });
 
             index = newIndex;
+
+            // not sure this works
+            CarChooserHelper_Init_Patch.Reset();
         }
     }
 }
