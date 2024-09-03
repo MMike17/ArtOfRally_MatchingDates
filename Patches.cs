@@ -44,12 +44,7 @@ namespace MatchingDates
 
                 // force unlock cars for this season
                 int detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
-
-                CarManager.AllCarsList.ForEach(car =>
-                {
-                    if (car.carStats.YearUnlocked <= detectedYear)
-                        Main.SetCarUnlockState(car, true);
-                });
+                CarManager.AllCarsList.ForEach(car => Main.SetCarUnlockState(car, car.carStats.YearUnlocked < detectedYear));
 
                 Main.Log("Unlocked cars for season " + detectedYear);
             });
