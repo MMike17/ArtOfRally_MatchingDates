@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityModManagerNet;
 
 using static MatchingDates.Settings;
+using static RealCarNames.Settings;
 using static UnityModManagerNet.UnityModManager;
 
 namespace MatchingDates
@@ -83,7 +84,7 @@ namespace MatchingDates
                             if (car.carStats.YearUnlocked > MIN_YEAR)
                             {
                                 SetCarUnlockState(car, false);
-                                forceLocked += "\n- " + car.name;
+                                forceLocked += "\n- " + CarNameProvider.SwitchName(car.name, Format.original_year);
                             }
                         }
                         else
