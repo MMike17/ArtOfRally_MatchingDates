@@ -3,6 +3,7 @@ using RealCarNames;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 using UnityModManagerNet;
 
 using static MatchingDates.Settings;
@@ -92,10 +93,27 @@ namespace MatchingDates
                         car.carStats.YearUnlocked = originalCarUnlock[car];
                 });
 
-                Log(forceUnlocked);
-                Log(forceLocked);
+                if (enabled)
+                {
+                    Log(forceUnlocked);
+                    Log(forceLocked);
 
-                Log("Refreshed car locks to " + settings.mode);
+                    Log("Refreshed car locks to " + settings.mode);
+                }
+                else // restores locks properly
+                {
+                    int maxYear = 0;
+                    GameModeManager.CareerManager.AllSeasons.ForEach(seasons =>
+                    {
+                        Season selected = seasons.FindLast(season => season.Status == Season.STATUS.COMPLETED);
+
+                        if (selected != null)
+                            maxYear = Mathf.Max(maxYear, selected.Year);
+                    });
+
+                    CarManager.AllCarsList.ForEach(car => SetCarUnlockState(car, car.carStats.YearUnlocked <= maxYear));
+                    Log("Restored original car unlocks state");
+                }
             });
         }
 
@@ -103,7 +121,7 @@ namespace MatchingDates
         {
             car.carStats.IsUnlocked = state;
 
-            if (string.IsNullOrEmpty(car.carStats.UnlockedSaveConstant))
+            if (enabled && string.IsNullOrEmpty(car.carStats.UnlockedSaveConstant))
                 car.carStats.UnlockedSaveConstant = "UNLOCKABLE_" + car.carStats.YearUnlocked;
 
             SaveGame.SetInt(car.carStats.UnlockedSaveConstant, state ? 1 : 0);
