@@ -28,12 +28,31 @@ namespace MatchingDates
     //    }
     //}
 
-    //[HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
+    [HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
     static class CarChooserHelper_InitHideClass_Patch
     {
-        static void Postfix()
+        // gets called every time we open the car selection menu
+        static void Prefix(CarChooserHelper __instance)
         {
-            Main.Log("Post fix for \"InitHideClass\"");
+            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER)
+                return;
+
+            Main.Try(() =>
+            {
+                // reset car selection index
+                SaveGame.SetInt(GameModeManager.GetSeasonDataCurrentGameMode().CarClass.ToString(), 0);
+
+                // force unlock cars for this season
+                int detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
+
+                CarManager.AllCarsList.ForEach(car =>
+                {
+                    if (car.carStats.YearUnlocked <= detectedYear)
+                        Main.SetCarUnlockState(car, true);
+                });
+
+                Main.Log("Unlocked cars for season " + detectedYear);
+            });
         }
     }
 
