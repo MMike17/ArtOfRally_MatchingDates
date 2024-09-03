@@ -6,10 +6,6 @@ using System.Reflection;
 
 namespace MatchingDates
 {
-    // Lets change the features :
-    // 1 - Lock cars to their production year first
-    // 2 - Hide cars in the selection menu
-
     // /!\ Doesn't work when we move between seasons... /!\
     // detect when we leave the screen (forward or backwards)
     // reset all data (mainly detectedYear)
