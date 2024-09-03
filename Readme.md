@@ -3,7 +3,7 @@
 [![](https://img.shields.io/github/v/release/MMike17/ArtOfRally_MatchingDates?label=Download)](https://github.com/MMike17/ArtOfRally_MatchingDates/releases/latest)
 ![](https://img.shields.io/badge/Game%20Version-v1.5.5-blue)
 
-A mod for Art of Rally that blocks some cars from being used in career mode if they haven't been invented yet.
+A mod for Art of Rally that blocks some cars from being used in career mode if they haven't been produced yet.
 
 #### Launcher Support
 
@@ -27,19 +27,17 @@ Latest release [![](https://img.shields.io/github/v/release/MMike17/ArtOfRally_R
 
 ## Usage
 
-Press `CTRL + F10` to bring up the mod menu.\
-<!-- Adjust settings to select what name format you want.
+Press Ctrl + F10 to open the mod manager menu.\
+Adjust settings to select what lock method you want.
 
-"Original" is the default name of the car.\
-"Real" is the real name of the car.\
-"Year" is the year of the model.
+"lock_to_date" will lock the car until its production year.
 
-If the mod is disabled, the regular game names are displayed by default. -->
+Disabling the mod in the manager will restore the original unlock conditions by default.
 
-<!-- ## Disclaimer
+## Disclaimer
 
-UI hot reload no longer works.\
-Please make sure to set the mod settings before entering menus where the car names are retrieved. -->
+There is no UI hot reload.\
+Please enable this mod and change settings **before** entering the career menu.
 
 ## Installation
 
@@ -51,10 +49,8 @@ and drop it into the mod manager's mods page.
 ## Showcase
 
 ![](Screenshots/Settings.png)
-![](Screenshots/.png)
-<!-- ![](Screenshots/OriginTimeRealSmall.png) -->
-<!-- ![](Screenshots/RealOriginTimeParenthesis.png) -->
-<!-- ![](Screenshots/Leaderboard.png) -->
+![](Screenshots/group2_1967.png)
+![](Screenshots/group2_1971.png)
 
 ## Acknowledgments
 
