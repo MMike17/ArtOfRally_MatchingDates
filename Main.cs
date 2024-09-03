@@ -70,7 +70,7 @@ namespace MatchingDates
                     {
                         if (settings.mode == Mode.lock_to_date)
                         {
-                            int newUnlock = CarNameProvider.GetCarYear(car.name);
+                            int newUnlock = CarNameProvider.GetCarYear(car.name) - 1;
                             car.carStats.YearUnlocked = newUnlock <= MIN_YEAR ? 0 : newUnlock;
 
                             // I'll keep this if we ever have extra cars with prior dates
