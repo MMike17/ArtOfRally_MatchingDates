@@ -71,7 +71,7 @@ namespace MatchingDates
                         if (settings.mode == Mode.lock_to_date)
                         {
                             int newUnlock = CarNameProvider.GetCarYear(car.name) - 1;
-                            car.carStats.YearUnlocked = newUnlock <= MIN_YEAR ? 0 : newUnlock;
+                            car.carStats.YearUnlocked = newUnlock <= MIN_YEAR ? MIN_YEAR : newUnlock;
 
                             // I'll keep this if we ever have extra cars with prior dates
                             //if (!car.carStats.IsUnlocked && car.carStats.YearUnlocked <= MIN_YEAR)
@@ -117,7 +117,7 @@ namespace MatchingDates
             });
         }
 
-        static void SetCarUnlockState(Car car, bool state)
+        public static void SetCarUnlockState(Car car, bool state)
         {
             car.carStats.IsUnlocked = state;
 
