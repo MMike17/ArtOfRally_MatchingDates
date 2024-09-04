@@ -7,9 +7,7 @@ using static MatchingDates.Settings;
 
 namespace MatchingDates
 {
-    // what do we need here for the new feature ?
-
-    // used for init and caching
+    // used for init and caching valid cars
     [HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
     static class CarChooserHelper_InitHideClass_Patch
     {

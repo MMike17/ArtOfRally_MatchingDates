@@ -56,9 +56,6 @@ namespace MatchingDates
                 if (storeOriginal)
                     originalCarUnlock = new Dictionary<Car, int>();
 
-                //string forceUnlocked = "Force unlocked cars : ";
-                //string forceLock = "Changed unlock year on cars : ";
-
                 CarManager.AllCarsList.ForEach(car =>
                 {
                     if (storeOriginal)
@@ -67,16 +64,7 @@ namespace MatchingDates
                     if (enabled)
                     {
                         if (settings.mode == Mode.lock_to_date)
-                        {
                             car.carStats.YearUnlocked = CarNameProvider.GetCarYear(car.name) - 1;
-
-                            // I'll keep this if we ever have extra cars with prior dates
-                            //if (!car.carStats.IsUnlocked && car.carStats.YearUnlocked <= MIN_YEAR)
-                            //  SetCarUnlockState(car, true);
-
-                            //if (car.carStats.YearUnlocked > MIN_YEAR)
-                            //    forceLock += "\n- " + CarNameProvider.SwitchName(car.name, Format.original);
-                        }
                         else
                             car.carStats.YearUnlocked = originalCarUnlock[car];
                     }
@@ -85,10 +73,7 @@ namespace MatchingDates
                 });
 
                 if (enabled)
-                {
-                    //Log(forceLock);
                     Log("Refreshed car locks to " + settings.mode);
-                }
                 else // restores locks properly
                 {
                     int maxYear = 0;
