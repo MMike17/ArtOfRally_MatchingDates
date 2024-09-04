@@ -63,7 +63,7 @@ namespace MatchingDates
 
                     if (enabled)
                     {
-                        if (settings.mode == Mode.lock_to_date)
+                        if (settings.mode == Mode.lock_to_date || settings.mode == Mode.hide_in_menu)
                             car.carStats.YearUnlocked = CarNameProvider.GetCarYear(car.name) - 1;
                         else
                             car.carStats.YearUnlocked = originalCarUnlock[car];
