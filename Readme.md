@@ -30,9 +30,11 @@ Latest release [![](https://img.shields.io/github/v/release/MMike17/ArtOfRally_R
 Press Ctrl + F10 to open the mod manager menu.\
 Adjust settings to select what lock method you want.
 
-"lock_to_date" will lock the car until its production year.
+"lock_to_date" will lock the car until its production year.\
+"hide_in_menu" will hide locked cars in the car selection menu.
 
-Disabling the mod in the manager will restore the original unlock conditions by default.
+Disabling the mod in the manager will restore the original unlock conditions by default.\
+If no cars are available for a season, the mod will default to enableing all cars.
 
 ## Disclaimer
 
