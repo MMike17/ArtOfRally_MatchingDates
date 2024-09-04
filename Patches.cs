@@ -25,6 +25,7 @@ namespace MatchingDates
     //    }
     //}
 
+    // used for init and caching
     [HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
     static class CarChooserHelper_InitHideClass_Patch
     {
@@ -46,7 +47,7 @@ namespace MatchingDates
 
             Main.Try(() =>
             {
-                // reset car selection index
+                // reset car selection index / does it change anything ?
                 //SaveGame.SetInt(GameModeManager.GetSeasonDataCurrentGameMode().CarClass.ToString(), 0);
 
                 // force unlock cars for this season
@@ -110,16 +111,29 @@ namespace MatchingDates
 
         public static int GetIndex(int index)
         {
+            if (originalList == null)
+            {
+                Main.Log("originalList is null");
+                return index;
+            }
+
+            if (truncatedList == null)
+            {
+                Main.Log("truncatedList is null");
+                return index;
+            }
+
             return originalList.IndexOf(truncatedList[index]);
         }
 
         public static string GetCurrentCarName() => instance != null ? truncatedList[instance.CarButton.index] : null;
     }
 
+    // replace returned car with currently selected
     [HarmonyPatch(typeof(CustomButtonCars), "GetCurrentCar")]
     static class CustomButtonCars_GetCurrentCar_Patch
     {
-        static void Postfix(CustomButtonCars __instance, ref Car __result)
+        static void Postfix(ref Car __result)
         {
             if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
                 return;
@@ -146,18 +160,28 @@ namespace MatchingDates
     static class CarChooserManager_ChangeCar_Patch
     {
         // this is called when we change cars
-        static void Prefix(CarChooserManager __instance, ref int index)
+        static void Prefix(ref int index)
         {
             if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
                 return;
 
             int newIndex = index;
+            Main.Try(() => newIndex = CarChooserHelper_InitHideClass_Patch.GetIndex(newIndex));
+            index = newIndex;
+        }
+    }
 
-            Main.Try(() =>
-            {
-                newIndex = CarChooserHelper_InitHideClass_Patch.GetIndex(newIndex);
-            });
+    // makes sure we save the correct car
+    [HarmonyPatch(typeof(CarManager), nameof(CarManager.SetChosenCar), new[] { typeof(int) })]
+    static class CarManager_SetChosenCar_Patch
+    {
+        static void Prefix(ref int index)
+        {
+            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+                return;
 
+            int newIndex = index;
+            Main.Try(() => newIndex = CarChooserHelper_InitHideClass_Patch.GetIndex(newIndex));
             index = newIndex;
         }
     }
