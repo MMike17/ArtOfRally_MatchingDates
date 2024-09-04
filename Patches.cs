@@ -42,7 +42,7 @@ namespace MatchingDates
 
         static void Postfix(CarChooserHelper __instance)
         {
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || Main.settings.mode != Mode.hide_in_selection)
+            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || Main.settings.mode != Mode.hide_in_menu)
                 return;
 
             Main.Try(() =>
@@ -117,7 +117,7 @@ namespace MatchingDates
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
-                Main.settings.mode != Mode.hide_in_selection)
+                Main.settings.mode != Mode.hide_in_menu)
                 return;
 
             Car result = __result;
@@ -147,7 +147,7 @@ namespace MatchingDates
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
-                Main.settings.mode != Mode.hide_in_selection)
+                Main.settings.mode != Mode.hide_in_menu)
                 return;
 
             int newIndex = index;
@@ -165,7 +165,7 @@ namespace MatchingDates
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
-                Main.settings.mode != Mode.hide_in_selection)
+                Main.settings.mode != Mode.hide_in_menu)
                 return;
 
             int newIndex = index;
