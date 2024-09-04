@@ -1,30 +1,10 @@
 ﻿using HarmonyLib;
-using RealCarNames;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
 
 namespace MatchingDates
 {
-    // /!\ Doesn't work when we move between seasons... /!\
-    // detect when we leave the screen (forward or backwards)
-    // reset all data (mainly detectedYear)
-
-    // DOESN'T WORK
-
-    // CarChooserHelper.BeginEvent
-    // CarChooserManager.UnInitForCarChooser
-
-    //[HarmonyPatch(typeof(), nameof())]
-    //static class x_x_Patch
-    //{
-    //    static void Postfix()
-    //    {
-    //        Main.Log("Post fix for \" \"");
-    //    }
-    //}
-
     // used for init and caching
     [HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
     static class CarChooserHelper_InitHideClass_Patch
@@ -48,7 +28,7 @@ namespace MatchingDates
             Main.Try(() =>
             {
                 // reset car selection index / does it change anything ?
-                //SaveGame.SetInt(GameModeManager.GetSeasonDataCurrentGameMode().CarClass.ToString(), 0);
+                SaveGame.SetInt(GameModeManager.GetSeasonDataCurrentGameMode().CarClass.ToString(), 0);
 
                 // force unlock cars for this season
                 detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
@@ -95,9 +75,6 @@ namespace MatchingDates
                     Invoke(__instance.CarButton, null);
 
                 __instance.CarButton.UpdateOptionTextAndArrows();
-
-                // texture is off
-                // what sets textures ?
 
                 // reselect first car of new list
                 UIManager.Instance.PanelManager.CarChooserManager.SelectCarInClass(
