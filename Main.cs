@@ -57,7 +57,7 @@ namespace MatchingDates
                     originalCarUnlock = new Dictionary<Car, int>();
 
                 //string forceUnlocked = "Force unlocked cars : ";
-                string forceLock = "Changed unlock year on cars : ";
+                //string forceLock = "Changed unlock year on cars : ";
 
                 CarManager.AllCarsList.ForEach(car =>
                 {
@@ -86,7 +86,7 @@ namespace MatchingDates
 
                 if (enabled)
                 {
-                    Log(forceLock);
+                    //Log(forceLock);
                     Log("Refreshed car locks to " + settings.mode);
                 }
                 else // restores locks properly
