@@ -3,8 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
+using static MatchingDates.Settings;
+
 namespace MatchingDates
 {
+    // what do we need here for the new feature ?
+
     // used for init and caching
     [HarmonyPatch(typeof(CarChooserHelper), nameof(CarChooserHelper.InitHideClass))]
     static class CarChooserHelper_InitHideClass_Patch
@@ -40,7 +44,7 @@ namespace MatchingDates
 
         static void Postfix(CarChooserHelper __instance)
         {
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER)
+            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || Main.settings.mode != Mode.hide_in_selection)
                 return;
 
             Main.Try(() =>
@@ -112,7 +116,10 @@ namespace MatchingDates
     {
         static void Postfix(ref Car __result)
         {
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                !CarChooserHelper_InitHideClass_Patch.isReady ||
+                Main.settings.mode != Mode.hide_in_selection)
                 return;
 
             Car result = __result;
@@ -139,7 +146,10 @@ namespace MatchingDates
         // this is called when we change cars
         static void Prefix(ref int index)
         {
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                !CarChooserHelper_InitHideClass_Patch.isReady ||
+                Main.settings.mode != Mode.hide_in_selection)
                 return;
 
             int newIndex = index;
@@ -154,7 +164,10 @@ namespace MatchingDates
     {
         static void Prefix(ref int index)
         {
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                !CarChooserHelper_InitHideClass_Patch.isReady ||
+                Main.settings.mode != Mode.hide_in_selection)
                 return;
 
             int newIndex = index;
