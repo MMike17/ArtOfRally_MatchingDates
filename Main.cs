@@ -56,6 +56,8 @@ namespace MatchingDates
                 if (storeOriginal)
                     originalCarUnlock = new Dictionary<Car, int>();
 
+                string debug = "Set car dates :";
+
                 CarManager.AllCarsList.ForEach(car =>
                 {
                     if (storeOriginal)
@@ -64,13 +66,15 @@ namespace MatchingDates
                     if (enabled)
                     {
                         if (settings.mode == Mode.lock_to_date || settings.mode == Mode.hide_in_menu)
-                            car.carStats.YearUnlocked = CarNameProvider.GetCarYear(car.name) - 1;
+                            car.carStats.YearUnlocked = CarNameProvider.GetCarYear(car) - 1; 
                         else
                             car.carStats.YearUnlocked = originalCarUnlock[car];
                     }
                     else
                         car.carStats.YearUnlocked = originalCarUnlock[car];
                 });
+
+                Log(debug);
 
                 if (enabled)
                     Log("Refreshed car locks to " + settings.mode);
@@ -111,7 +115,7 @@ namespace MatchingDates
             });
         }
 
-        public static bool IsCarValid(string carName, int rallyYear) => rallyYear >= CarNameProvider.GetCarYear(carName);
+        public static bool IsCarValid(Car car, int rallyYear) => rallyYear > car.carStats.YearUnlocked;
 
         public static void Log(string message) => logger.Log(message);
 

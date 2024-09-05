@@ -29,9 +29,6 @@ namespace MatchingDates
 
             Main.Try(() =>
             {
-                // reset car selection index / does it change anything ?
-                SaveGame.SetInt(GameModeManager.GetSeasonDataCurrentGameMode().CarClass.ToString(), 0);
-
                 // force unlock cars for this season
                 detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
                 CarManager.AllCarsList.ForEach(car => Main.SetCarUnlockState(car, car.carStats.YearUnlocked < detectedYear));
@@ -50,13 +47,17 @@ namespace MatchingDates
                 // store original and curated list
                 originalList = new List<string>(__instance.CarButton.stringList);
                 truncatedList = new List<string>(__instance.CarButton.stringList);
-                List<string> toRemove = new List<string>();
 
-                truncatedList.ForEach(carName =>
+                List<string> toRemove = new List<string>();
+                List<Car> currentCarsList = CarManager.GetCurrentCarsListForClass(GameModeManager.GetSeasonDataCurrentGameMode().CarClass);
+
+                for (int i = 0; i < truncatedList.Count; i++)
                 {
-                    if (!Main.IsCarValid(carName, detectedYear))
-                        toRemove.Add(carName);
-                });
+                    Car car = currentCarsList[i];
+
+                    if (!Main.IsCarValid(car, detectedYear))
+                        toRemove.Add(car.name);
+                }
 
                 toRemove.ForEach(car => truncatedList.Remove(car));
 
@@ -67,6 +68,7 @@ namespace MatchingDates
                     return;
                 }
 
+                __instance.CarButton.index = 0;
                 __instance.CarButton.stringList = truncatedList;
                 __instance.CarButton.stringListLength = truncatedList.Count - 1;
 
@@ -88,7 +90,7 @@ namespace MatchingDates
             });
         }
 
-        public static int GetIndex(int index)
+        public static int ToOriginalIndex(int index)
         {
             if (originalList == null)
             {
@@ -105,7 +107,7 @@ namespace MatchingDates
             return originalList.IndexOf(truncatedList[index]);
         }
 
-        public static string GetCurrentCarName() => instance != null ? truncatedList[instance.CarButton.index] : null;
+        public static int GetCurrentCarOriginalIndex() => instance != null ? ToOriginalIndex(instance.CarButton.index) : -1;
     }
 
     // replace returned car with currently selected
@@ -124,13 +126,8 @@ namespace MatchingDates
 
             Main.Try(() =>
             {
-                string targetName = CarChooserHelper_InitHideClass_Patch.GetCurrentCarName();
-
-                if (targetName != null)
-                {
-                    List<Car> cars = CarManager.GetCurrentCarsListForClass(GameModeManager.GetSeasonDataCurrentGameMode().CarClass);
-                    result = cars.Find(car => car.name == targetName);
-                }
+                int adjustedIndex = CarChooserHelper_InitHideClass_Patch.GetCurrentCarOriginalIndex();
+                result = CarManager.GetCurrentCarsListForClass(GameModeManager.GetSeasonDataCurrentGameMode().CarClass)[adjustedIndex];
             });
 
             __result = result;
@@ -151,7 +148,7 @@ namespace MatchingDates
                 return;
 
             int newIndex = index;
-            Main.Try(() => newIndex = CarChooserHelper_InitHideClass_Patch.GetIndex(newIndex));
+            Main.Try(() => newIndex = CarChooserHelper_InitHideClass_Patch.ToOriginalIndex(newIndex));
             index = newIndex;
         }
     }
@@ -169,7 +166,7 @@ namespace MatchingDates
                 return;
 
             int newIndex = index;
-            Main.Try(() => newIndex = CarChooserHelper_InitHideClass_Patch.GetIndex(newIndex));
+            Main.Try(() => newIndex = CarChooserHelper_InitHideClass_Patch.ToOriginalIndex(newIndex));
             index = newIndex;
         }
     }
