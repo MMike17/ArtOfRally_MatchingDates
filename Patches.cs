@@ -236,8 +236,6 @@ namespace MatchingDates
     {
         static void Postfix(StageResults __instance)
         {
-            Main.Log("This should be current race results");
-
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
@@ -260,8 +258,6 @@ namespace MatchingDates
     {
         static void Postfix(StageResults __instance)
         {
-            Main.Log("This should be current rally results");
-
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
@@ -279,13 +275,11 @@ namespace MatchingDates
     }
 
     // replace car names in season results
-    [HarmonyPatch(typeof(SeasonStandingsScreen), nameof(SeasonStandingsScreen.Init))]
-    static class SeasonStandingsScreen_Init_Patch
+    [HarmonyPatch(typeof(SeasonStandingsScreen), nameof(SeasonStandingsScreen.Refresh))]
+    static class SeasonStandingsScreen_Refresh_Patch
     {
         static void Postfix(SeasonStandingsScreen __instance)
         {
-            Main.Log("This should be end of season screen");
-
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
