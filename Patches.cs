@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
+
 using static MatchingDates.Settings;
 using Random = UnityEngine.Random;
 
@@ -41,7 +42,10 @@ namespace MatchingDates
 
         static void Postfix(CarChooserHelper __instance)
         {
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || Main.settings.mode != Mode.hide_in_menu)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                (!Main.settings.hideLockedInMenu &&
+                !Main.settings.replaceInLeaderboards))
                 return;
 
             Main.Try(() =>
@@ -121,7 +125,7 @@ namespace MatchingDates
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
-                Main.settings.mode != Mode.hide_in_menu)
+                !Main.settings.hideLockedInMenu)
                 return;
 
             Car result = __result;
@@ -146,7 +150,7 @@ namespace MatchingDates
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
-                Main.settings.mode != Mode.hide_in_menu)
+                !Main.settings.hideLockedInMenu)
                 return;
 
             int newIndex = index;
@@ -164,7 +168,7 @@ namespace MatchingDates
             if (!Main.enabled ||
                 GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
                 !CarChooserHelper_InitHideClass_Patch.isReady ||
-                Main.settings.mode != Mode.hide_in_menu)
+                !Main.settings.hideLockedInMenu)
                 return;
 
             int newIndex = index;
@@ -181,7 +185,10 @@ namespace MatchingDates
 
         static void Postfix()
         {
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                !CarChooserHelper_InitHideClass_Patch.isReady ||
+                !Main.settings.replaceInLeaderboards)
                 return;
 
             Main.Try(() =>
@@ -231,7 +238,10 @@ namespace MatchingDates
         {
             Main.Log("This should be current race results");
 
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                !CarChooserHelper_InitHideClass_Patch.isReady ||
+                !Main.settings.replaceInLeaderboards)
                 return;
 
             Main.Try(() =>
@@ -252,7 +262,10 @@ namespace MatchingDates
         {
             Main.Log("This should be current rally results");
 
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                !CarChooserHelper_InitHideClass_Patch.isReady ||
+                !Main.settings.replaceInLeaderboards)
                 return;
 
             Main.Try(() =>
@@ -273,7 +286,10 @@ namespace MatchingDates
         {
             Main.Log("This should be end of season screen");
 
-            if (!Main.enabled || GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER || !CarChooserHelper_InitHideClass_Patch.isReady)
+            if (!Main.enabled ||
+                GameModeManager.GameMode != GameModeManager.GAME_MODES.CAREER ||
+                !CarChooserHelper_InitHideClass_Patch.isReady ||
+                !Main.settings.replaceInLeaderboards)
                 return;
 
             Main.Try(() =>
