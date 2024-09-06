@@ -3,7 +3,7 @@
 [![](https://img.shields.io/github/v/release/MMike17/ArtOfRally_MatchingDates?label=Download)](https://github.com/MMike17/ArtOfRally_MatchingDates/releases/latest)
 ![](https://img.shields.io/badge/Game%20Version-v1.5.5-blue)
 
-A mod for Art of Rally that blocks some cars from being used in career mode if they haven't been produced yet.
+A mod for Art of Rally that locks cars from being used in career mode if they haven't been produced yet.
 
 #### Launcher Support
 
@@ -28,10 +28,11 @@ Latest release [![](https://img.shields.io/github/v/release/MMike17/ArtOfRally_R
 ## Usage
 
 Press Ctrl + F10 to open the mod manager menu.\
-Adjust settings to select what lock method you want.
+Adjust settings to select what lock method you want.\
+By default, the mod locks every car to their production year in career mode.
 
-"lock_to_date" will lock the car until its production year.\
-"hide_in_menu" will hide locked cars in the car selection menu.
+"hideLockedInMenu" will hide locked cars in the car selection menu.\
+"replaceInLeaderboards" will make sure all racers in the rally will have unlocked cars.
 
 Disabling the mod in the manager will restore the original unlock conditions by default.\
 If no cars are available for a season, the mod will default to enableing all cars.
@@ -40,6 +41,8 @@ If no cars are available for a season, the mod will default to enableing all car
 
 There is no UI hot reload.\
 Please enable this mod and change settings **before** entering the career menu.
+
+This mod might lock some cars out of career mode entirely.
 
 ## Installation
 
@@ -53,6 +56,7 @@ and drop it into the mod manager's mods page.
 ![](Screenshots/Settings.png)
 ![](Screenshots/group2_1967.png)
 ![](Screenshots/group2_1971.png)
+![](Screenshots/Leaderboard.png)
 
 ## Acknowledgments
 
