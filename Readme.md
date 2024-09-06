@@ -53,7 +53,7 @@ and drop it into the mod manager's mods page.
 
 ## Showcase
 
-![](Screenshots/Settings.png)
+![](Screenshots/settings.png)
 ![](Screenshots/group2_1967.png)
 ![](Screenshots/group2_1971.png)
 ![](Screenshots/Leaderboard.png)
