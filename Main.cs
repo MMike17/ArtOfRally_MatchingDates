@@ -56,29 +56,19 @@ namespace MatchingDates
                 if (storeOriginal)
                     originalCarUnlock = new Dictionary<Car, int>();
 
-                string debug = "Set car dates :";
-
                 CarManager.AllCarsList.ForEach(car =>
                 {
                     if (storeOriginal)
                         originalCarUnlock.Add(car, car.carStats.YearUnlocked);
 
                     if (enabled)
-                    {
-                        if (settings.mode == Mode.lock_to_date || settings.mode == Mode.hide_in_menu)
-                            car.carStats.YearUnlocked = CarNameProvider.GetCarYear(car) - 1; 
-                        else
-                            car.carStats.YearUnlocked = originalCarUnlock[car];
-                    }
+                        car.carStats.YearUnlocked = CarNameProvider.GetCarYear(car) - 1;
                     else
                         car.carStats.YearUnlocked = originalCarUnlock[car];
                 });
 
-                Log(debug);
-
-                if (enabled)
-                    Log("Refreshed car locks to " + settings.mode);
-                else // restores locks properly
+                // restores locks properly
+                if (!enabled)
                 {
                     int maxYear = 0;
                     GameModeManager.CareerManager.AllSeasons.ForEach(seasons =>

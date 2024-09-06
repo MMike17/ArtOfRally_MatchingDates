@@ -1,4 +1,5 @@
-﻿using UnityModManagerNet;
+﻿using UnityEngine;
+using UnityModManagerNet;
 
 using static UnityModManagerNet.UnityModManager;
 
@@ -6,14 +7,12 @@ namespace MatchingDates
 {
     public class Settings : ModSettings, IDrawable
     {
-        public enum Mode
-        {
-            lock_to_date,
-            hide_in_menu
-        }
-
-        [Draw(DrawType.PopupList)]
-        public Mode mode;
+        [Draw(DrawType.Toggle)]
+        [Header("The default behaviour of this mod is to set cars unlock dates to their production year.")]
+        public bool hideLockedInMenu;
+        [Draw(DrawType.Toggle)]
+        [Header("This option will change the cars of other racers in the leaderboards to comply with the current year.")]
+        public bool replaceInLeaderboards;
 
         public void OnChange()
         {
