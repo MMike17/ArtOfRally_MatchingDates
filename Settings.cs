@@ -14,6 +14,10 @@ namespace MatchingDates
         [Header("This option will change the cars of other racers in the leaderboards to comply with the current year.")]
         public bool replaceInLeaderboards;
 
+        [Header("Debug")]
+        [Draw(DrawType.Toggle)]
+        public bool disableInfoLogs;
+
         public void OnChange()
         {
             Main.RefreshCarLocks();

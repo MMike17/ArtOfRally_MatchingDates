@@ -6,7 +6,6 @@ using System.Reflection;
 using UnityEngine;
 using UnityModManagerNet;
 
-using static MatchingDates.Settings;
 using static UnityModManagerNet.UnityModManager;
 
 namespace MatchingDates
@@ -80,7 +79,9 @@ namespace MatchingDates
                     });
 
                     CarManager.AllCarsList.ForEach(car => SetCarUnlockState(car, car.carStats.YearUnlocked <= maxYear));
-                    Log("Restored original car unlocks state");
+
+                    if (!settings.disableInfoLogs)
+                        Log("Restored original car unlocks state");
                 }
             });
         }

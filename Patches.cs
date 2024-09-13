@@ -5,9 +5,6 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
-using static MatchingDates.Settings;
-using Random = UnityEngine.Random;
-
 namespace MatchingDates
 {
     // used for init and caching valid cars
@@ -36,7 +33,8 @@ namespace MatchingDates
                 detectedYear = int.Parse(__instance.GroupTitle.Text.text.Split(new string[] { "  |  " }, StringSplitOptions.None)[1]);
                 CarManager.AllCarsList.ForEach(car => Main.SetCarUnlockState(car, car.carStats.YearUnlocked < detectedYear));
 
-                Main.Log("Locked/unlocked cars for season " + detectedYear);
+                if (!Main.settings.disableInfoLogs)
+                    Main.Log("Locked/unlocked cars for season " + detectedYear);
             });
         }
 
@@ -92,7 +90,8 @@ namespace MatchingDates
                     originalList.IndexOf(truncatedList[0])
                 );
 
-                Main.Log("Cached adjusted list of cars.");
+                if (!Main.settings.disableInfoLogs)
+                    Main.Log("Cached adjusted list of cars.");
             });
         }
 
